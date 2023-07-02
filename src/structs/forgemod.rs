@@ -30,19 +30,11 @@ impl ForgeMod {
     }
 }
 
-pub struct ForgeModBytes<'a>(pub &'a [u8]);
-
-impl<'a, T: Into<&'a [u8]>> From<T> for ForgeModBytes<'a> {
-    fn from(data: T) -> Self {
-        Self(data.into())
-    }
-}
-
-impl<'a> TryFrom<ForgeModBytes<'a>> for ForgeMod {
+impl<'a> TryFrom<&'a [u8]> for ForgeMod {
     type Error = bincode::Error;
 
-    fn try_from(bytes: ForgeModBytes<'a>) -> Result<Self, Self::Error> {
-        let contents = XzDecoder::new(bytes.0).into_inner();
+    fn try_from(bytes: &'a [u8]) -> Result<Self, Self::Error> {
+        let contents = XzDecoder::new(bytes).into_inner();
         bincode::deserialize(contents)
     }
 }
