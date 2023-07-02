@@ -32,9 +32,9 @@ impl ForgeMod {
 
 pub struct ForgeModBytes<'a>(pub &'a [u8]);
 
-impl From<[u8; 0]> for ForgeMod {
-    fn from(_: [u8; 0]) -> Self {
-        ForgeMod::default()
+impl<'a, T: Into<&'a [u8]>> From<T> for ForgeModBytes<'a> {
+    fn from(data: T) -> Self {
+        Self(data.into())
     }
 }
 
