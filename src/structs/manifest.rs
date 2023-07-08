@@ -1,5 +1,5 @@
 
-use std::path::PathBuf;
+use std::{path::PathBuf, str::FromStr};
 
 use serde::{Deserialize, Serialize};
 
@@ -62,5 +62,28 @@ impl TryFrom<PathBuf> for ForgeManifest {
     fn try_from(path: PathBuf) -> Result<Self, Self::Error> {
         let manifest = std::fs::read_to_string(path)?;
         Ok(serde_json::from_str(&manifest)?)
+    }
+}
+
+impl FromStr for ModCategory {
+    type Err = ();
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.to_lowercase().as_str() {
+            "core" => Ok(ModCategory::Core),
+            "libraries" => Ok(ModCategory::Libraries),
+            "cosmetic" => Ok(ModCategory::Cosmetic),
+            "gameplay" => Ok(ModCategory::Gameplay),
+            "leaderboards" => Ok(ModCategory::Leaderboards),
+            "lighting" => Ok(ModCategory::Lighting),
+            "multiplayer" => Ok(ModCategory::Multiplayer),
+            "accessibility" => Ok(ModCategory::Accessibility),
+            "practice" => Ok(ModCategory::Practice),
+            "streaming" => Ok(ModCategory::Streaming),
+            "text" => Ok(ModCategory::Text),
+            "tweaks" => Ok(ModCategory::Tweaks),
+            "ui" => Ok(ModCategory::UI),
+            _ => Ok(ModCategory::Other),
+        }
     }
 }
