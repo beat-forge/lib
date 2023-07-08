@@ -1,4 +1,6 @@
 
+use std::path::PathBuf;
+
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
@@ -52,4 +54,13 @@ pub enum ModCategory {
 
     #[default]
     Other,
+}
+
+impl TryFrom<PathBuf> for ForgeManifest {
+    type Error = std::io::Error;
+
+    fn try_from(path: PathBuf) -> Result<Self, Self::Error> {
+        let manifest = std::fs::read_to_string(path)?;
+        Ok(serde_json::from_str(&manifest)?)
+    }
 }
