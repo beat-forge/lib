@@ -6,7 +6,7 @@ use xz2::{read::XzDecoder, write::XzEncoder};
 use super::manifest::ForgeManifest;
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ForgeMod {
     pub manifest: ForgeManifest,
     #[serde(with = "serde_bytes")]
