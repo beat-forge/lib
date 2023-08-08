@@ -1,1 +1,3 @@
-pub mod structs;
+mod structs;
+#[cfg(test)]
+mod tests;
