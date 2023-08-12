@@ -12,6 +12,8 @@ use super::manifest::{ManifestComponent, ManifestVersion, ForgeManifestSafe};
 /// Outer wrapper for forge mods.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ForgeMod<Version: ManifestVersion, Comp: ManifestComponent, Inner: ForgeModData> {
+    pub(crate) format_version: u32,
+
     pub(crate) manifest: ForgeManifestSafe<Comp, Version>,
 
     pub(crate) _inner: Inner,
@@ -39,5 +41,9 @@ impl<
     pub fn from_bytes<'a, T: Into<&'a [u8]>>(bytes: T) -> Result<Self, bincode::Error> {
         let contents = XzDecoder::new(bytes.into()).into_inner();
         bincode::deserialize(contents)
+    }
+
+    pub fn version(&self) -> u32 {
+        self.format_version
     }
 }

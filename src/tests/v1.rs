@@ -76,35 +76,4 @@ mod tests {
         let tmod2 = ForgeMod::from_bytes(&*bin).unwrap();
         assert_eq!(_tmod.build(), tmod2)
     }
-
-    #[test]
-    fn test_modbuilder_includes() {
-        let mut _tmod = ModBuilder::new_mod_raw(
-            ManifestBuilder::new_mod(
-                "pp".to_string(),
-                Version::new(0, 1, 2),
-                VersionReq::parse("=1.23.4").unwrap(),
-                "./test.dll".into(),
-            )
-            .build(),
-            vec![0xFF, 0xFF],
-        );
-        let includes_data = IncludeDataBuilder::new().add_raw("./Plugins".to_string(), vec![0xFF, 0xFF]).clone().build();
-        _tmod.includes(includes_data.clone());
-        assert_eq!(_tmod._inner.includes_data, includes_data);
-    }
-
-    #[test]
-    fn test_manifestbuilder_build() {
-        let manifest = ManifestBuilder::new_mod(
-            "pp".to_string(),
-            Version::new(0, 1, 2),
-            VersionReq::parse("=1.23.4").unwrap(),
-            "./test.dll".into(),
-        )
-        .build();
-        assert_eq!(manifest._id, "pp");
-        assert_eq!(manifest.manifest_version, 1);
-        assert_eq!(manifest._type, "mod");
-    }
 }

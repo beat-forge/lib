@@ -484,6 +484,7 @@ impl ModBuilder<manifest::Mod, data::Mod> {
 
     pub fn build(self) -> ForgeModV1<manifest::Mod, data::Mod> {
         ForgeMod {
+            format_version: 1,
             manifest: self._manifest.into(),
             _inner: self._inner,
             _marker: PhantomData,
@@ -501,6 +502,7 @@ impl ModBuilder<manifest::Parent, data::Parent> {
 
     pub fn build(self) -> ForgeModV1<manifest::Parent, data::Parent> {
         ForgeMod {
+            format_version: 1,
             manifest: self._manifest.into(),
             _inner: self._inner,
             _marker: PhantomData,
@@ -548,6 +550,7 @@ impl ModBuilder<manifest::Module, data::Module> {
 
     pub fn build(self) -> ForgeModV1<manifest::Module, data::Module> {
         ForgeMod {
+            format_version: 1,
             manifest: self._manifest.into(),
             _inner: self._inner,
             _marker: PhantomData,
@@ -586,6 +589,7 @@ impl ModBuilder<manifest::Lib, data::Lib> {
 
     pub fn build(self) -> ForgeModV1<manifest::Lib, data::Lib> {
         ForgeMod {
+            format_version: 1,
             manifest: self._manifest.into(),
             _inner: self._inner,
             _marker: PhantomData,
