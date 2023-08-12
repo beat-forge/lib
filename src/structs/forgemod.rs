@@ -15,9 +15,9 @@ pub struct ForgeMod<Version: ManifestVersion, Comp: ManifestComponent, Inner: Fo
     pub(crate) format_version: u32,
     pub(crate) kind: String,
 
-    pub(crate) manifest: ForgeManifestSafe<Comp, Version>,
+    pub manifest: ForgeManifestSafe<Comp, Version>,
 
-    pub(crate) _inner: Inner,
+    pub data: Inner,
 
     #[serde(skip)]
     pub(crate) _marker: PhantomData<Version>,
