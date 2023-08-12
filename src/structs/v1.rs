@@ -29,7 +29,7 @@ pub struct ManifestV1;
 impl ManifestVersion for ManifestV1 {}
 
 // Convenience type
-type ForgeManifestV1<T> = ForgeManifest<T, ManifestV1>;
+// type ForgeManifestV1<T> = ForgeManifest<T, ManifestV1>;
 
 /// V1 inner components
 mod manifest {
@@ -239,8 +239,8 @@ impl ManifestBuilder<manifest::Mod> {
     build_manifest_builder!(depends, Vec<manifest::Dependency>);
     build_manifest_builder!(conflicts, Vec<manifest::Dependency>);
 
-    pub fn build(self) -> ForgeManifestV1<manifest::Mod> {
-        ForgeManifestV1 {
+    pub fn build(self) -> ForgeManifest<manifest::Mod, ManifestV1> {
+        ForgeManifest {
             _id: slug::slugify(&self._inner.name),
             manifest_version: 1,
             _type: self.kind.to_string(),
@@ -278,8 +278,8 @@ impl ManifestBuilder<manifest::Lib> {
     build_manifest_builder!(depends, Vec<manifest::Dependency>);
     build_manifest_builder!(conflicts, Vec<manifest::Dependency>);
 
-    pub fn build(self) -> ForgeManifestV1<manifest::Lib> {
-        ForgeManifestV1 {
+    pub fn build(self) -> ForgeManifest<manifest::Lib, ManifestV1> {
+        ForgeManifest {
             _id: slug::slugify(&self._inner.name),
             manifest_version: 1,
             _type: self.kind.to_string(),
@@ -312,8 +312,8 @@ impl ManifestBuilder<manifest::Parent> {
     build_manifest_builder!(depends, Vec<manifest::Dependency>);
     build_manifest_builder!(conflicts, Vec<manifest::Dependency>);
 
-    pub fn build(self) -> ForgeManifestV1<manifest::Parent> {
-        ForgeManifestV1 {
+    pub fn build(self) -> ForgeManifest<manifest::Parent, ManifestV1> {
+        ForgeManifest {
             _id: slug::slugify(&self._inner.name),
             manifest_version: 1,
             _type: self.kind.to_string(),
@@ -343,8 +343,8 @@ impl ManifestBuilder<manifest::Module> {
     build_manifest_builder!(depends, Vec<manifest::Dependency>);
     build_manifest_builder!(conflicts, Vec<manifest::Dependency>);
 
-    pub fn build(self) -> ForgeManifestV1<manifest::Module> {
-        ForgeManifestV1 {
+    pub fn build(self) -> ForgeManifest<manifest::Module, ManifestV1> {
+        ForgeManifest {
             _id: slug::slugify(&self._inner.name),
             manifest_version: 1,
             _type: self.kind.to_string(),
@@ -400,7 +400,7 @@ impl DependencyBuilder {
 /*                             Data Storage Format                            */
 /* -------------------------------------------------------------------------- */
 
-type ForgeModV1<Comp, Data> = ForgeMod<ManifestV1, Comp, Data>;
+// type ForgeModV1<Comp, Data> = ForgeMod<ManifestV1, Comp, Data>;
 
 mod data {
     use super::*;
@@ -448,12 +448,12 @@ mod data {
 /// It is intended that the manifest is build first, then the data is added.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ModBuilder<Type: ManifestComponent, Data: ForgeModData> {
-    pub(self) _manifest: ForgeManifestV1<Type>,
+    pub(self) _manifest: ForgeManifest<Type, ManifestV1>,
     pub(self) _inner: Data,
 }
 
 impl ModBuilder<manifest::Mod, data::Mod> {
-    pub fn new_mod_raw(manifest: ForgeManifestV1<manifest::Mod>, artifact_data: Vec<u8>) -> Self {
+    pub fn new_mod_raw(manifest: ForgeManifest<manifest::Mod, ManifestV1>, artifact_data: Vec<u8>) -> Self {
         Self {
             _manifest: manifest,
             _inner: data::Mod {
@@ -464,7 +464,7 @@ impl ModBuilder<manifest::Mod, data::Mod> {
     }
 
     pub fn new_mod(
-        manifest: ForgeManifestV1<manifest::Mod>,
+        manifest: ForgeManifest<manifest::Mod, ManifestV1>,
         artifact_path: PathBuf,
     ) -> Result<Self, std::io::Error> {
         let artifact_data = std::fs::read(artifact_path)?;
@@ -483,7 +483,7 @@ impl ModBuilder<manifest::Mod, data::Mod> {
         self
     }
 
-    pub fn build(self) -> ForgeModV1<manifest::Mod, data::Mod> {
+    pub fn build(self) -> ForgeMod<ManifestV1, manifest::Mod, data::Mod> {
         ForgeMod {
             format_version: 1,
             kind: "mod".into(),
@@ -505,14 +505,14 @@ impl ForgeMod<ManifestV1, manifest::Mod, data::Mod> {
 }
 
 impl ModBuilder<manifest::Parent, data::Parent> {
-    pub fn new_module_parent(manifest: ForgeManifestV1<manifest::Parent>) -> Self {
+    pub fn new_module_parent(manifest: ForgeManifest<manifest::Parent, ManifestV1>) -> Self {
         Self {
             _manifest: manifest,
             _inner: data::Parent {},
         }
     }
 
-    pub fn build(self) -> ForgeModV1<manifest::Parent, data::Parent> {
+    pub fn build(self) -> ForgeMod<ManifestV1, manifest::Parent, data::Parent> {
         ForgeMod {
             format_version: 1,
             kind: "parent".into(),
@@ -525,7 +525,7 @@ impl ModBuilder<manifest::Parent, data::Parent> {
 
 impl ModBuilder<manifest::Module, data::Module> {
     pub fn new_module_raw(
-        manifest: ForgeManifestV1<manifest::Module>,
+        manifest: ForgeManifest<manifest::Module, ManifestV1>,
         artifact_data: Vec<u8>,
     ) -> Self {
         Self {
@@ -540,7 +540,7 @@ impl ModBuilder<manifest::Module, data::Module> {
         }
     }
 
-    pub fn new_module(manifest: ForgeManifestV1<manifest::Module>) -> Result<Self, std::io::Error> {
+    pub fn new_module(manifest: ForgeManifest<manifest::Module, ManifestV1>) -> Result<Self, std::io::Error> {
         // safety: artifact is not optional
         let artifact_data = std::fs::read(manifest.inner.artifact.as_ref().unwrap())?;
 
@@ -561,7 +561,7 @@ impl ModBuilder<manifest::Module, data::Module> {
         self
     }
 
-    pub fn build(self) -> ForgeModV1<manifest::Module, data::Module> {
+    pub fn build(self) -> ForgeMod<ManifestV1, manifest::Module, data::Module> {
         ForgeMod {
             format_version: 1,
             kind: "module".into(),
@@ -583,7 +583,7 @@ impl ForgeMod<ManifestV1, manifest::Module, data::Module> {
 }
 
 impl ModBuilder<manifest::Lib, data::Lib> {
-    pub fn new_lib_raw(manifest: ForgeManifestV1<manifest::Lib>, artifact_data: Vec<u8>) -> Self {
+    pub fn new_lib_raw(manifest: ForgeManifest<manifest::Lib, ManifestV1>, artifact_data: Vec<u8>) -> Self {
         Self {
             _inner: data::Lib {
                 artifact_data,
@@ -593,7 +593,7 @@ impl ModBuilder<manifest::Lib, data::Lib> {
         }
     }
 
-    pub fn new_lib(manifest: ForgeManifestV1<manifest::Lib>) -> Result<Self, std::io::Error> {
+    pub fn new_lib(manifest: ForgeManifest<manifest::Lib, ManifestV1>) -> Result<Self, std::io::Error> {
         // safety: artifact is not optional
         let artifact_data = std::fs::read(manifest.inner.artifact.as_ref().unwrap())?;
 
@@ -611,7 +611,7 @@ impl ModBuilder<manifest::Lib, data::Lib> {
         self
     }
 
-    pub fn build(self) -> ForgeModV1<manifest::Lib, data::Lib> {
+    pub fn build(self) -> ForgeMod<ManifestV1, manifest::Lib, data::Lib> {
         ForgeMod {
             format_version: 1,
             kind: "lib".into(),
@@ -662,10 +662,10 @@ impl IncludeDataBuilder {
 }
 
 pub enum ForgeModTypes {
-    Mod(ForgeModV1<manifest::Mod, data::Mod>),
-    Parent(ForgeModV1<manifest::Parent, data::Parent>),
-    Module(ForgeModV1<manifest::Module, data::Module>),
-    Lib(ForgeModV1<manifest::Lib, data::Lib>),
+    Mod(ForgeMod<ManifestV1, manifest::Mod, data::Mod>),
+    Parent(ForgeMod<ManifestV1, manifest::Parent, data::Parent>),
+    Module(ForgeMod<ManifestV1, manifest::Module, data::Module>),
+    Lib(ForgeMod<ManifestV1, manifest::Lib, data::Lib>),
 }
 
 impl Display for ForgeModTypes {
@@ -694,22 +694,22 @@ pub fn unpack_v1_forgemod<'a, T: Into<&'a [u8]>>(data: T) -> Result<ForgeModType
 
     match kind {
         "mod" => {
-            ForgeModV1::<manifest::Mod, data::Mod>::from_bytes(data)
+            ForgeMod::<ManifestV1, manifest::Mod, data::Mod>::from_bytes(data)
                 .map(|v| ForgeModTypes::Mod(v))
                 .map_err(|e| e.into())
         },
         "parent" => {
-            ForgeModV1::<manifest::Parent, data::Parent>::from_bytes(data)
+            ForgeMod::<ManifestV1, manifest::Parent, data::Parent>::from_bytes(data)
                 .map(|v| ForgeModTypes::Parent(v))
                 .map_err(|e| e.into())
         },
         "module" => {
-            ForgeModV1::<manifest::Module, data::Module>::from_bytes(data)
+            ForgeMod::<ManifestV1, manifest::Module, data::Module>::from_bytes(data)
                 .map(|v| ForgeModTypes::Module(v))
                 .map_err(|e| e.into())
         },
         "lib" => {
-            ForgeModV1::<manifest::Lib, data::Lib>::from_bytes(data)
+            ForgeMod::<ManifestV1, manifest::Lib, data::Lib>::from_bytes(data)
                 .map(|v| ForgeModTypes::Lib(v))
                 .map_err(|e| e.into())
         },
