@@ -57,7 +57,7 @@ impl<
         bincode::deserialize(contents)
     }
 
-    // pub fn version(&self) -> u32 {
-    //     self.format_version
-    // }
+    pub fn get_inner(&self) -> &Inner {
+        &self._inner
+    }
 }
