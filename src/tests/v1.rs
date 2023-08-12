@@ -3,8 +3,8 @@ mod tests {
     use semver::{Version, VersionReq};
 
     use crate::structs::{
-        forgemod::ForgeMod,
-        v1::{IncludeDataBuilder, ManifestBuilder, ModBuilder},
+        forgemod::{ForgeMod, ForgeModGeneric},
+        v1::{IncludeDataBuilder, ManifestBuilder, ModBuilder, unpack_v1_forgemod},
     };
 
     #[test]
@@ -24,6 +24,25 @@ mod tests {
         let bin = _tmod.clone().build().pack().unwrap();
         let tmod2 = ForgeMod::from_bytes(&*bin).unwrap();
         assert_eq!(_tmod.build(), tmod2)
+    }
+
+    #[test]
+    fn test_generic_deser() {
+        let mut _tmod = ModBuilder::new_mod_raw(
+            ManifestBuilder::new_mod(
+                "pp".to_string(),
+                Version::new(0, 1, 2),
+                VersionReq::parse("=1.23.4").unwrap(),
+                "./test.dll".into(),
+            )
+            .build(),
+            vec![0xFF, 0xFF],
+        );
+        _tmod.includes(IncludeDataBuilder::new().add_raw("./Plugins".to_string(), vec![0xFF, 0xFF]).clone().build());
+
+        let bin = _tmod.build().pack().unwrap();
+        let mod_ = unpack_v1_forgemod(&*bin).unwrap().to_string();
+        assert_eq!(mod_, "mod")
     }
 
     #[test]

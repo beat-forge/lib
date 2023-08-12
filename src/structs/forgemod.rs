@@ -13,6 +13,7 @@ use super::manifest::{ManifestComponent, ManifestVersion, ForgeManifestSafe};
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ForgeMod<Version: ManifestVersion, Comp: ManifestComponent, Inner: ForgeModData> {
     pub(crate) format_version: u32,
+    pub(crate) kind: String,
 
     pub(crate) manifest: ForgeManifestSafe<Comp, Version>,
 
@@ -20,6 +21,19 @@ pub struct ForgeMod<Version: ManifestVersion, Comp: ManifestComponent, Inner: Fo
 
     #[serde(skip)]
     pub(crate) _marker: PhantomData<Version>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ForgeModGeneric {
+    pub(crate) format_version: u32,
+    pub(crate) kind: String,
+}
+
+impl ForgeModGeneric {
+    pub fn from_bytes<'a, T: Into<&'a [u8]>>(bytes: T) -> Result<Self, bincode::Error> {
+        let contents = XzDecoder::new(bytes.into()).into_inner();
+        bincode::deserialize(contents)
+    }
 }
 
 /// Marker trait for forge mod data.
@@ -43,7 +57,7 @@ impl<
         bincode::deserialize(contents)
     }
 
-    pub fn version(&self) -> u32 {
-        self.format_version
-    }
+    // pub fn version(&self) -> u32 {
+    //     self.format_version
+    // }
 }
