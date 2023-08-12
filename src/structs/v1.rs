@@ -3,7 +3,8 @@
 use std::{
     marker::PhantomData,
     path::PathBuf,
-    str::FromStr,
+    str::FromStr, fmt::Display,
+    fmt::Formatter
 };
 
 use semver::{Version, VersionReq};
@@ -12,7 +13,7 @@ use serde::{Deserialize, Serialize};
 use crate::build_manifest_builder;
 
 use super::{
-    forgemod::{ForgeMod, ForgeModData},
+    forgemod::{ForgeMod, ForgeModData, ForgeModGeneric},
     manifest::*,
 };
 
@@ -485,6 +486,7 @@ impl ModBuilder<manifest::Mod, data::Mod> {
     pub fn build(self) -> ForgeModV1<manifest::Mod, data::Mod> {
         ForgeMod {
             format_version: 1,
+            kind: "mod".into(),
             manifest: self._manifest.into(),
             _inner: self._inner,
             _marker: PhantomData,
@@ -503,6 +505,7 @@ impl ModBuilder<manifest::Parent, data::Parent> {
     pub fn build(self) -> ForgeModV1<manifest::Parent, data::Parent> {
         ForgeMod {
             format_version: 1,
+            kind: "parent".into(),
             manifest: self._manifest.into(),
             _inner: self._inner,
             _marker: PhantomData,
@@ -551,6 +554,7 @@ impl ModBuilder<manifest::Module, data::Module> {
     pub fn build(self) -> ForgeModV1<manifest::Module, data::Module> {
         ForgeMod {
             format_version: 1,
+            kind: "module".into(),
             manifest: self._manifest.into(),
             _inner: self._inner,
             _marker: PhantomData,
@@ -590,6 +594,7 @@ impl ModBuilder<manifest::Lib, data::Lib> {
     pub fn build(self) -> ForgeModV1<manifest::Lib, data::Lib> {
         ForgeMod {
             format_version: 1,
+            kind: "lib".into(),
             manifest: self._manifest.into(),
             _inner: self._inner,
             _marker: PhantomData,
@@ -623,5 +628,61 @@ impl IncludeDataBuilder {
 
     pub fn build(self) -> Vec<data::IncludeData> {
         self._inners
+    }
+}
+
+pub enum ForgeModTypes {
+    Mod(ForgeModV1<manifest::Mod, data::Mod>),
+    Parent(ForgeModV1<manifest::Parent, data::Parent>),
+    Module(ForgeModV1<manifest::Module, data::Module>),
+    Lib(ForgeModV1<manifest::Lib, data::Lib>),
+}
+
+impl Display for ForgeModTypes {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ForgeModTypes::Mod(_) => write!(f, "mod"),
+            ForgeModTypes::Parent(_) => write!(f, "parent"),
+            ForgeModTypes::Module(_) => write!(f, "module"),
+            ForgeModTypes::Lib(_) => write!(f, "lib"),
+        }
+    }
+}
+
+/// THIS IS THE FUNCTION THAT YOU WANT TO USE
+/// DONT USE ANYTHING ELSE!!!!
+/// I promise i will make it better!
+pub fn unpack_v1_forgemod<'a, T: Into<&'a [u8]>>(data: T) -> Result<ForgeModTypes, Box<dyn std::error::Error>> {
+    let data = data.into();
+    let generic = ForgeModGeneric::from_bytes(data)?;
+    let kind = generic.kind.as_str();
+    let format_version = generic.format_version;
+
+    if format_version != 1 {
+        return Err("cannot find v1 manifest information.".into());
+    }
+
+    match kind {
+        "mod" => {
+            ForgeModV1::<manifest::Mod, data::Mod>::from_bytes(data)
+                .map(|v| ForgeModTypes::Mod(v))
+                .map_err(|e| e.into())
+        },
+        "parent" => {
+            ForgeModV1::<manifest::Parent, data::Parent>::from_bytes(data)
+                .map(|v| ForgeModTypes::Parent(v))
+                .map_err(|e| e.into())
+        },
+        "module" => {
+            ForgeModV1::<manifest::Module, data::Module>::from_bytes(data)
+                .map(|v| ForgeModTypes::Module(v))
+                .map_err(|e| e.into())
+        },
+        "lib" => {
+            ForgeModV1::<manifest::Lib, data::Lib>::from_bytes(data)
+                .map(|v| ForgeModTypes::Lib(v))
+                .map_err(|e| e.into())
+        },
+        _ => Err("unknown kind".into()),
     }
 }
