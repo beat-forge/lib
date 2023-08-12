@@ -56,8 +56,4 @@ impl<
         let contents = XzDecoder::new(bytes.into()).into_inner();
         bincode::deserialize(contents)
     }
-
-    pub fn get_inner(&self) -> &Inner {
-        &self._inner
-    }
 }
