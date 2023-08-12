@@ -494,6 +494,16 @@ impl ModBuilder<manifest::Mod, data::Mod> {
     }
 }
 
+impl ForgeMod<ManifestV1, manifest::Mod, data::Mod> {
+    pub fn artifact_data(&self) -> &[u8] {
+        &self._inner.artifact_data
+    }
+
+    pub fn includes_data(&self) -> &[data::IncludeData] {
+        &self._inner.includes_data
+    }
+}
+
 impl ModBuilder<manifest::Parent, data::Parent> {
     pub fn new_module_parent(manifest: ForgeManifestV1<manifest::Parent>) -> Self {
         Self {
@@ -562,6 +572,16 @@ impl ModBuilder<manifest::Module, data::Module> {
     }
 }
 
+impl ForgeMod<ManifestV1, manifest::Module, data::Module> {
+    pub fn artifact_data(&self) -> &[u8] {
+        &self._inner.artifact_data
+    }
+
+    pub fn includes_data(&self) -> &[data::IncludeData] {
+        &self._inner.includes_data
+    }
+}
+
 impl ModBuilder<manifest::Lib, data::Lib> {
     pub fn new_lib_raw(manifest: ForgeManifestV1<manifest::Lib>, artifact_data: Vec<u8>) -> Self {
         Self {
@@ -599,6 +619,16 @@ impl ModBuilder<manifest::Lib, data::Lib> {
             _inner: self._inner,
             _marker: PhantomData,
         }
+    }
+}
+
+impl ForgeMod<ManifestV1, manifest::Lib, data::Lib> {
+    pub fn artifact_data(&self) -> &[u8] {
+        &self._inner.artifact_data
+    }
+
+    pub fn includes_data(&self) -> &[data::IncludeData] {
+        &self._inner.includes_data
     }
 }
 
