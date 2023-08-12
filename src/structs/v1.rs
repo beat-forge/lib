@@ -32,7 +32,7 @@ impl ManifestVersion for ManifestV1 {}
 // type ForgeManifestV1<T> = ForgeManifest<T, ManifestV1>;
 
 /// V1 inner components
-mod manifest {
+pub mod manifest {
     use super::*;
 
     #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
@@ -402,7 +402,7 @@ impl DependencyBuilder {
 
 // type ForgeModV1<Comp, Data> = ForgeMod<ManifestV1, Comp, Data>;
 
-mod data {
+pub mod data {
     use super::*;
 
     #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
