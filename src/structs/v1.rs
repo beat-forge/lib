@@ -37,91 +37,91 @@ mod manifest {
 
     #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
     pub struct Dependency {
-        pub(super) name: String,
-        pub(super) version: VersionReq,
+        pub name: String,
+        pub version: VersionReq,
     }
 
     #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
     pub struct Include {
-        pub(super) bs_dest: PathBuf,
-        pub(super) local_src: PathBuf,
+        pub bs_dest: PathBuf,
+        pub local_src: PathBuf,
     }
 
     /// type: mod
     #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
     pub struct Mod {
-        pub(super) name: String,
-        pub(super) description: String,
-        pub(super) website: String,
-        pub(super) version: Version,
-        pub(super) game_version: VersionReq,
-        pub(super) category: String,
+        pub name: String,
+        pub description: String,
+        pub website: String,
+        pub version: Version,
+        pub game_version: VersionReq,
+        pub category: String,
 
-        pub(super) artifact: Option<PathBuf>, // not actually optional
-        pub(super) includes: Vec<Include>,
+        pub artifact: Option<PathBuf>, // not actually optional
+        pub includes: Vec<Include>,
 
-        pub(super) pre_exec: Option<PathBuf>,
-        pub(super) post_exec: Option<PathBuf>,
+        pub pre_exec: Option<PathBuf>,
+        pub post_exec: Option<PathBuf>,
 
-        pub(super) depends: Vec<Dependency>,
-        pub(super) conflicts: Vec<Dependency>,
+        pub depends: Vec<Dependency>,
+        pub conflicts: Vec<Dependency>,
     }
 
     /// type: module_parent
     #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
     pub struct Parent {
-        pub(super) name: String,
-        pub(super) description: String,
-        pub(super) website: String,
-        pub(super) version: Version,
-        pub(super) game_version: VersionReq,
-        pub(super) category: String,
+        pub name: String,
+        pub description: String,
+        pub website: String,
+        pub version: Version,
+        pub game_version: VersionReq,
+        pub category: String,
 
-        pub(super) pre_exec: Option<PathBuf>,
-        pub(super) post_exec: Option<PathBuf>,
+        pub pre_exec: Option<PathBuf>,
+        pub post_exec: Option<PathBuf>,
 
-        pub(super) depends: Vec<Dependency>,
-        pub(super) conflicts: Vec<Dependency>,
+        pub depends: Vec<Dependency>,
+        pub conflicts: Vec<Dependency>,
 
-        pub(super) modules: Vec<PathBuf>,
+        pub modules: Vec<PathBuf>,
     }
 
     /// type: module
     #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
     pub struct Module {
-        pub(super) name: String,
+        pub name: String,
 
-        pub(super) required: bool,
-        pub(super) suggested: bool,
+        pub required: bool,
+        pub suggested: bool,
 
-        pub(super) artifact: Option<PathBuf>, // not actually optional
-        pub(super) includes: Vec<Include>,
+        pub artifact: Option<PathBuf>, // not actually optional
+        pub includes: Vec<Include>,
 
-        pub(super) pre_exec: Option<PathBuf>,
-        pub(super) post_exec: Option<PathBuf>,
+        pub pre_exec: Option<PathBuf>,
+        pub post_exec: Option<PathBuf>,
 
-        pub(super) depends: Vec<Dependency>,
-        pub(super) conflicts: Vec<Dependency>,
+        pub depends: Vec<Dependency>,
+        pub conflicts: Vec<Dependency>,
     }
 
     /// type: lib
     #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
     pub struct Lib {
-        pub(super) name: String,
-        pub(super) description: String,
-        pub(super) website: String,
-        pub(super) version: Version,
-        pub(super) game_version: VersionReq,
-        pub(super) category: String,
+        pub name: String,
+        pub description: String,
+        pub website: String,
+        pub version: Version,
+        pub game_version: VersionReq,
+        pub category: String,
 
-        pub(super) artifact: Option<PathBuf>, // not actually optional
-        pub(super) includes: Vec<Include>,
+        pub artifact: Option<PathBuf>, // not actually optional
+        pub includes: Vec<Include>,
 
-        pub(super) pre_exec: Option<PathBuf>,
-        pub(super) post_exec: Option<PathBuf>,
+        pub pre_exec: Option<PathBuf>,
+        pub post_exec: Option<PathBuf>,
 
-        pub(super) depends: Vec<Dependency>,
-        pub(super) conflicts: Vec<Dependency>,
+        pub depends: Vec<Dependency>,
+        pub conflicts: Vec<Dependency>,
     }
 
     impl ManifestComponent for Mod {}
@@ -407,16 +407,16 @@ mod data {
 
     #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
     pub struct IncludeData {
-        pub(super) dest: String,
+        pub dest: String,
         #[serde(with = "serde_bytes")]
-        pub(super) data: Vec<u8>,
+        pub data: Vec<u8>,
     }
 
     #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
     pub struct Mod {
         #[serde(with = "serde_bytes")]
-        pub(super) artifact_data: Vec<u8>,
-        pub(super) includes_data: Vec<IncludeData>,
+        pub artifact_data: Vec<u8>,
+        pub includes_data: Vec<IncludeData>,
     }
 
     #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -424,19 +424,19 @@ mod data {
 
     #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
     pub struct Module {
-        pub(super) _id: String,
-        pub(super) required: bool,
-        pub(super) suggested: bool,
+        pub _id: String,
+        pub required: bool,
+        pub suggested: bool,
         #[serde(with = "serde_bytes")]
-        pub(super) artifact_data: Vec<u8>,
-        pub(super) includes_data: Vec<IncludeData>,
+        pub artifact_data: Vec<u8>,
+        pub includes_data: Vec<IncludeData>,
     }
 
     #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
     pub struct Lib {
         #[serde(with = "serde_bytes")]
-        pub(super) artifact_data: Vec<u8>,
-        pub(super) includes_data: Vec<IncludeData>,
+        pub artifact_data: Vec<u8>,
+        pub includes_data: Vec<IncludeData>,
     }
 
     impl ForgeModData for Mod {}
@@ -488,19 +488,9 @@ impl ModBuilder<manifest::Mod, data::Mod> {
             format_version: 1,
             kind: "mod".into(),
             manifest: self._manifest.into(),
-            _inner: self._inner,
+            data: self._inner,
             _marker: PhantomData,
         }
-    }
-}
-
-impl ForgeMod<ManifestV1, manifest::Mod, data::Mod> {
-    pub fn artifact_data(&self) -> &[u8] {
-        &self._inner.artifact_data
-    }
-
-    pub fn includes_data(&self) -> &[data::IncludeData] {
-        &self._inner.includes_data
     }
 }
 
@@ -517,7 +507,7 @@ impl ModBuilder<manifest::Parent, data::Parent> {
             format_version: 1,
             kind: "parent".into(),
             manifest: self._manifest.into(),
-            _inner: self._inner,
+            data: self._inner,
             _marker: PhantomData,
         }
     }
@@ -566,19 +556,9 @@ impl ModBuilder<manifest::Module, data::Module> {
             format_version: 1,
             kind: "module".into(),
             manifest: self._manifest.into(),
-            _inner: self._inner,
+            data: self._inner,
             _marker: PhantomData,
         }
-    }
-}
-
-impl ForgeMod<ManifestV1, manifest::Module, data::Module> {
-    pub fn artifact_data(&self) -> &[u8] {
-        &self._inner.artifact_data
-    }
-
-    pub fn includes_data(&self) -> &[data::IncludeData] {
-        &self._inner.includes_data
     }
 }
 
@@ -616,19 +596,9 @@ impl ModBuilder<manifest::Lib, data::Lib> {
             format_version: 1,
             kind: "lib".into(),
             manifest: self._manifest.into(),
-            _inner: self._inner,
+            data: self._inner,
             _marker: PhantomData,
         }
-    }
-}
-
-impl ForgeMod<ManifestV1, manifest::Lib, data::Lib> {
-    pub fn artifact_data(&self) -> &[u8] {
-        &self._inner.artifact_data
-    }
-
-    pub fn includes_data(&self) -> &[data::IncludeData] {
-        &self._inner.includes_data
     }
 }
 

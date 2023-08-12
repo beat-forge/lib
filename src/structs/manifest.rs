@@ -20,14 +20,14 @@ pub struct ForgeManifest<Inner: ManifestComponent, Version: ManifestVersion> {
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub(crate) struct ForgeManifestSafe<Inner: ManifestComponent, Version: ManifestVersion> {
+pub struct ForgeManifestSafe<Inner: ManifestComponent, Version: ManifestVersion> {
     pub(crate) _id: String,
-    pub(crate) manifest_version: u32,
+    pub manifest_version: u32,
     #[serde(rename = "type")]
-    pub(crate) _type: String,
+    pub _type: String,
 
     // #[serde(flatten)] does not work with bincode
-    pub(crate) inner: Inner,
+    pub inner: Inner,
 
     #[serde(skip)]
     pub(crate) _marker: PhantomData<Version>,
