@@ -7,13 +7,13 @@ use serde::{Deserialize, Serialize};
 /// Builders should only be able to be generic over the version of the manifest.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ForgeManifest<Inner: ManifestComponent, Version: ManifestVersion> {
-    pub(crate) _id: String,
-    pub(crate) manifest_version: u32,
+    pub _id: String,
+    pub manifest_version: u32,
     #[serde(rename = "type")]
-    pub(crate) _type: String,
+    pub _type: String,
 
     #[serde(flatten)]
-    pub(crate) inner: Inner,
+    pub inner: Inner,
 
     #[serde(skip)]
     pub(crate) _marker: PhantomData<Version>,
@@ -21,7 +21,7 @@ pub struct ForgeManifest<Inner: ManifestComponent, Version: ManifestVersion> {
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ForgeManifestSafe<Inner: ManifestComponent, Version: ManifestVersion> {
-    pub(crate) _id: String,
+    pub _id: String,
     pub manifest_version: u32,
     #[serde(rename = "type")]
     pub _type: String,
