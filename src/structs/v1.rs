@@ -631,6 +631,13 @@ impl IncludeDataBuilder {
     }
 }
 
+pub enum ForgeManifestTypes {
+    Mod(ForgeManifest<manifest::Mod, ManifestV1>),
+    Parent(ForgeManifest<manifest::Parent, ManifestV1>),
+    Module(ForgeManifest<manifest::Module, ManifestV1>),
+    Lib(ForgeManifest<manifest::Lib, ManifestV1>),
+}
+
 pub enum ForgeModTypes {
     Mod(ForgeMod<ManifestV1, manifest::Mod, data::Mod>),
     Parent(ForgeMod<ManifestV1, manifest::Parent, data::Parent>),
@@ -650,7 +657,7 @@ impl Display for ForgeModTypes {
 }
 
 /// THIS IS THE FUNCTION THAT YOU WANT TO USE
-/// DONT USE ANYTHING ELSE!!!!
+/// DON'T USE ANYTHING ELSE!!!!
 /// I promise i will make it better!
 pub fn unpack_v1_forgemod<'a, T: Into<&'a [u8]>>(data: T) -> Result<ForgeModTypes, Box<dyn std::error::Error>> {
     let data = data.into();
@@ -682,6 +689,61 @@ pub fn unpack_v1_forgemod<'a, T: Into<&'a [u8]>>(data: T) -> Result<ForgeModType
             ForgeMod::<ManifestV1, manifest::Lib, data::Lib>::from_bytes(data)
                 .map(|v| ForgeModTypes::Lib(v))
                 .map_err(|e| e.into())
+        },
+        _ => Err("unknown kind".into()),
+    }
+}
+
+pub fn parse_v1_forgemanifest<'a, T: Into<&'a [u8]>>(data: T) -> Result<ForgeManifestTypes, Box<dyn std::error::Error>> {
+    let data = data.into();
+    let generic = ForgeManifestGeneric::from_bytes(data)?;
+    let kind = generic._type.as_str();
+    let manifest_version = generic.manifest_version;
+
+    if manifest_version != 1 {
+        return Err("cannot find v1 manifest information.".into());
+    }
+
+    match kind {
+        "mod" => {
+            let inner = serde_json::from_slice::<manifest::Mod>(data)?;
+            Ok(ForgeManifestTypes::Mod(ForgeManifest {
+                _id: inner.name.clone(),
+                manifest_version: 1,
+                _type: "mod".into(),
+                inner,
+                _marker: PhantomData,
+            }))
+        },
+        "parent" => {
+            let inner = serde_json::from_slice::<manifest::Parent>(data)?;
+            Ok(ForgeManifestTypes::Parent(ForgeManifest {
+                _id: inner.name.clone(),
+                manifest_version: 1,
+                _type: "parent".into(),
+                inner,
+                _marker: PhantomData,
+            }))
+        },
+        "module" => {
+            let inner = serde_json::from_slice::<manifest::Module>(data)?;
+            Ok(ForgeManifestTypes::Module(ForgeManifest {
+                _id: inner.name.clone(),
+                manifest_version: 1,
+                _type: "module".into(),
+                inner,
+                _marker: PhantomData,
+            }))
+        },
+        "lib" => {
+            let inner = serde_json::from_slice::<manifest::Lib>(data)?;
+            Ok(ForgeManifestTypes::Lib(ForgeManifest {
+                _id: inner.name.clone(),
+                manifest_version: 1,
+                _type: "lib".into(),
+                inner,
+                _marker: PhantomData,
+            }))
         },
         _ => Err("unknown kind".into()),
     }

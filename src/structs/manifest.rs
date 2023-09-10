@@ -33,6 +33,20 @@ pub struct ForgeManifestSafe<Inner: ManifestComponent, Version: ManifestVersion>
     pub(crate) _marker: PhantomData<Version>,
 }
 
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ForgeManifestGeneric {
+    pub _id: String,
+    pub manifest_version: u32,
+    #[serde(rename = "type")]
+    pub _type: String,
+}
+
+impl ForgeManifestGeneric {
+    pub fn from_bytes<'a, T: Into<&'a [u8]>>(bytes: T) -> Result<Self, Box<dyn std::error::Error>> {
+        Ok(serde_json::from_slice(bytes.into())?)
+    }
+}
+
 impl<Inner: ManifestComponent, Version: ManifestVersion> From<ForgeManifest<Inner, Version>> for ForgeManifestSafe<Inner, Version> {
     fn from(manifest: ForgeManifest<Inner, Version>) -> Self {
         Self {
