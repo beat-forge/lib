@@ -645,6 +645,17 @@ pub enum ForgeModTypes {
     Lib(ForgeMod<ManifestV1, manifest::Lib, data::Lib>),
 }
 
+impl Display for ForgeManifestTypes {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ForgeManifestTypes::Mod(m) => write!(f, "{}", m._id),
+            ForgeManifestTypes::Parent(m) => write!(f, "{}", m._id),
+            ForgeManifestTypes::Module(m) => write!(f, "{}", m._id),
+            ForgeManifestTypes::Lib(m) => write!(f, "{}", m._id),
+        }
+    }
+}
+
 impl Display for ForgeModTypes {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
