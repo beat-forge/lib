@@ -14,7 +14,6 @@ mod tests {
                 "pp".to_string(),
                 Version::new(0, 1, 2),
                 VersionReq::parse("=1.23.4").unwrap(),
-                "./test.dll".into(),
             )
             .build(),
             vec![0xFF, 0xFF],
@@ -33,7 +32,6 @@ mod tests {
                 "pp".to_string(),
                 Version::new(0, 1, 2),
                 VersionReq::parse("=1.23.4").unwrap(),
-                "./test.dll".into(),
             )
             .build(),
             vec![0xFF, 0xFF],
@@ -52,7 +50,6 @@ mod tests {
                 "pp".to_string(),
                 Version::new(0, 1, 2),
                 VersionReq::parse("=1.23.4").unwrap(),
-                "./test.dll".into(),
             )
             .build(),
             vec![0xFF, 0xFF],
@@ -85,7 +82,6 @@ mod tests {
         let mut _tmod = ModBuilder::new_module_raw(
             ManifestBuilder::new_module(
                 "pp".to_string(),
-                "./test.dll".into(),
             )
             .build(),
             vec![0xFF, 0xFF],

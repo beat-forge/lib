@@ -219,14 +219,12 @@ impl ManifestBuilder<manifest::Mod> {
         name: String,
         mod_version: Version,
         game_version: VersionReq,
-        artifact: PathBuf,
     ) -> Self {
         Self {
             kind: ManifestTypes::Mod,
             _inner: manifest::Mod {
                 name,
                 version: mod_version,
-                artifact: Some(artifact),
                 game_version,
                 ..Default::default()
             },
@@ -258,14 +256,12 @@ impl ManifestBuilder<manifest::Lib> {
         name: String,
         lib_version: Version,
         game_version: VersionReq,
-        artifact: PathBuf,
     ) -> Self {
         Self {
             kind: ManifestTypes::Lib,
             _inner: manifest::Lib {
                 name,
                 version: lib_version,
-                artifact: Some(artifact),
                 game_version,
                 ..Default::default()
             },
@@ -327,12 +323,11 @@ impl ManifestBuilder<manifest::Parent> {
 }
 
 impl ManifestBuilder<manifest::Module> {
-    pub fn new_module(module_name: String, artifact: PathBuf) -> Self {
+    pub fn new_module(module_name: String) -> Self {
         Self {
             kind: ManifestTypes::Module,
             _inner: manifest::Module {
                 name: module_name,
-                artifact: Some(artifact),
                 ..Default::default()
             },
         }
