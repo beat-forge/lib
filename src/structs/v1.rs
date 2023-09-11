@@ -629,6 +629,7 @@ impl IncludeDataBuilder {
     }
 }
 
+#[derive(Debug)]
 pub enum ForgeManifestTypes {
     Mod(ForgeManifest<manifest::Mod, ManifestV1>),
     Parent(ForgeManifest<manifest::Parent, ManifestV1>),
@@ -636,6 +637,7 @@ pub enum ForgeManifestTypes {
     Lib(ForgeManifest<manifest::Lib, ManifestV1>),
 }
 
+#[derive(Debug)]
 pub enum ForgeModTypes {
     Mod(ForgeMod<ManifestV1, manifest::Mod, data::Mod>),
     Parent(ForgeMod<ManifestV1, manifest::Parent, data::Parent>),
