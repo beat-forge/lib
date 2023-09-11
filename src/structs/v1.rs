@@ -57,6 +57,7 @@ pub mod manifest {
         pub game_version: VersionReq,
         pub category: String,
 
+        #[serde(skip)]
         pub artifact: Option<PathBuf>, // not actually optional
         pub includes: Vec<Include>,
 
@@ -94,6 +95,7 @@ pub mod manifest {
         pub required: bool,
         pub suggested: bool,
 
+        #[serde(skip)]
         pub artifact: Option<PathBuf>, // not actually optional
         pub includes: Vec<Include>,
 
@@ -114,6 +116,7 @@ pub mod manifest {
         pub game_version: VersionReq,
         pub category: String,
 
+        #[serde(skip)]
         pub artifact: Option<PathBuf>, // not actually optional
         pub includes: Vec<Include>,
 
